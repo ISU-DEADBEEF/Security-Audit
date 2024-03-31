@@ -4,7 +4,7 @@ workdir=/usr/local/bin/logger
 
 start() {
     cd $workdir
-    /usr/bin/python logger.py &
+    python3 logger.py &
     echo "logger.py started."
 }
 
