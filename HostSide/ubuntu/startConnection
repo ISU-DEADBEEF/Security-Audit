@@ -7,7 +7,7 @@ workdir=/usr/local/bin/audit
 
 start() {
     cd $workdir
-    python3 file-sender.py &
+    python3 file-sender.py $1 $2 $3 $4 &
     echo "started sending."
 }
 
