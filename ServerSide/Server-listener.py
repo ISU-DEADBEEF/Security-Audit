@@ -10,7 +10,6 @@ def create_server(host, port):
         while True:
             conn, addr = s.accept()
             with conn:
-   #             print(f"Connected by {addr}")
 
                 # Receive the header which contains the file path
                 header_data = conn.recv(1024).decode('utf-8')
@@ -38,15 +37,10 @@ def create_server(host, port):
                         if existing_data != all_data:
                             with open(file_path, "wb") as file:
                                 file.write(all_data)
-  #                              print(f"Data written to {file_path} because of changes.")
                         else:
- #                           print("No changes detected. No write operation performed.")
                 else:
                     with open(file_path, "wb") as file:
                         file.write(all_data)
-#                        print(f"Data written to {file_path} as it did not exist.")
-
-#                print("Operation complete. Connection closed.")
 
 if __name__ == "__main__":
     HOST = ''  # Symbolic name meaning all available interfaces
