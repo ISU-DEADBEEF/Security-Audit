@@ -30,7 +30,7 @@ def send_file(server_host, server_port, file_path, header):
             
             # Connection and file transfer successful
             s.close()
-            print("File sent successfully.")
+            #print("File sent successfully.")
             return
         except ConnectionRefusedError:
             print("Connection refused by the server. Retrying in 3 seconds...")
@@ -45,7 +45,7 @@ def send_file(server_host, server_port, file_path, header):
 
 if __name__ == "__main__":
     if len(sys.argv) != 5:
-        print("Usage: python3 send.py <server_ip> <port> <file_path> <header>")
+        print("Usage: python3 file-sender.py <server_ip> <port> <file_path> <header>")
         sys.exit(1)
     
     server_ip = sys.argv[1]
@@ -53,5 +53,7 @@ if __name__ == "__main__":
     file_path = sys.argv[3]
     header = sys.argv[4]
     
-    send_file(server_ip, port, file_path, header)
+    while(True):
+        send_file(server_ip, port, file_path, header)
+        time.sleep(3)
 

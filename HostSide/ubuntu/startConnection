@@ -20,7 +20,6 @@ stop() {
     pid=$(ps aux | grep file-sender.py | grep -v grep | awk '{print $2}')
     kill $pid
     sleep 2
-    echo "sneak.py killed."
 }
 
 case "$1" in
