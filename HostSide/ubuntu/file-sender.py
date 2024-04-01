@@ -12,7 +12,7 @@ def send_file(server_host, server_port, file_path, header):
             
             # Attempt to connect to the server
             s.connect((server_host, server_port))
-            print("Connected to server.")
+            #print("Connected to server.")
 
             # Send the header and file path as the initial data
             initial_data = f"{header}\n{file_path}\n"
@@ -33,7 +33,7 @@ def send_file(server_host, server_port, file_path, header):
             #print("File sent successfully.")
             return
         except ConnectionRefusedError:
-            print("Connection refused by the server. Retrying in 3 seconds...")
+            #print("Connection refused by the server. Retrying in 3 seconds...")
             time.sleep(3)
             attempts += 1
         finally:
@@ -41,7 +41,7 @@ def send_file(server_host, server_port, file_path, header):
             s.close()
     
     # If unable to connect after max attempts
-    print("!!SERVER DOWN!!")
+    #print("!!SERVER DOWN!!")
 
 if __name__ == "__main__":
     if len(sys.argv) != 5:
