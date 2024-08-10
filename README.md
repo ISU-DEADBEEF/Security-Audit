@@ -13,7 +13,118 @@ Security-Audit is a server/host security logging system designed to enhance your
 
 ## Installation
 
-*Installation instructions will be provided soon.*
+Follow these steps to install and set up Security-Audit:
+
+### Upgrades and Dependencies
+
+First, update and upgrade the system packages:
+
+```bash
+sudo su
+apt update && apt upgrade -y
+```
+
+### Create Logger User
+
+Create a user for logging purposes:
+
+```bash
+adduser logger
+visudo
+```
+
+Add the following line to the bottom of the sudoers file:
+
+```plaintext
+logger ALL=(ALL) NOPASSWD: /usr/local/bin/log_history.sh
+```
+
+### Install Logging Script
+
+Create and edit the logging script file at `/usr/local/bin/log_history.sh`:
+
+```bash
+#!/bin/bash
+
+# Get the current user
+USER=$(whoami)
+
+# Define the log file path
+LOG_FILE="/var/log/Logger/${USER}.history"
+
+# Function to append the last command to the log file
+log_command() {
+    # Get the last executed command from history
+    local LAST_COMMAND="$(history 1 | sed 's/^ *[0-9]* *//')"
+
+    # Append the last command to the log file with a timestamp
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - ${LAST_COMMAND}" >> "${LOG_FILE}"
+}
+
+# Export the function to be used in PROMPT_COMMAND
+export -f log_command
+
+# Set PROMPT_COMMAND to log each command before it executes
+PROMPT_COMMAND="log_command; $PROMPT_COMMAND"
+
+# Ensure the log file exists and is writable
+mkdir -p "/var/log/Logger"
+touch "${LOG_FILE}"
+chmod a+rw "${LOG_FILE}"
+```
+
+Change the permissions of the script:
+
+```bash
+chmod 755 /usr/local/bin/log_history.sh
+```
+
+### Configure Global Shell Environment
+
+Edit the global bash configuration file `/etc/bash.bashrc` to source the logging script for all users:
+
+```bash
+# Source the logging script to set up PROMPT_COMMAND for all users
+if [ -f /usr/local/bin/log_history.sh ]; then
+    source /usr/local/bin/log_history.sh
+fi
+```
+
+Add the script source line to the skeleton user profile:
+
+```bash
+echo "source /usr/local/bin/log_history.sh" | sudo tee -a /etc/skel/.bashrc
+```
+
+Set the permissions for the logging directory:
+
+```bash
+chmod 1777 /var/log/Logger
+```
+
+### Testing
+
+Create a dummy user and test the logging system:
+
+```bash
+adduser dummy
+```
+
+Switch to the dummy user and run some commands:
+
+```bash
+su dummy
+ls
+pwd
+exit
+```
+
+Check the log file for the dummy user:
+
+```bash
+ls /var/log/Logger/
+tail /var/log/Logger/dummy.history
+```
 
 ## Usage
 
@@ -36,4 +147,3 @@ Security-Audit is released under an open-source license, allowing free use, modi
 ---
 
 For more information, questions, or support, please contact the project maintainers.
-
