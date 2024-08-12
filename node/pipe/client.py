@@ -1,7 +1,7 @@
 import os
 import socket
 
-def send_history_files(server_host='localhost', server_port=9999):
+def send_last_line_from_files(server_host='localhost', server_port=9999):
     # Define the directory path
     directory_path = "/var/log/Logger"
 
@@ -16,14 +16,19 @@ def send_history_files(server_host='localhost', server_port=9999):
 
             # Check if it is a file and ends with .history
             if os.path.isfile(file_path) and file_name.endswith('.history'):
+                username = file_name.split('.')[0]
                 with open(file_path, 'r') as file:
-                    file_content = file.read()
-                    client_socket.sendall(file_content.encode('utf-8'))
-                    print(f"Sent file: {file_name}")
+                    lines = file.readlines()
+                    if lines:
+                        last_line = lines[-1].strip()
+                        # Send the username and the last line
+                        message = f"{username}:{last_line}"
+                        client_socket.sendall(message.encode('utf-8'))
+                        print(f"Sent last line from {file_name}")
     finally:
         # Close the socket
         client_socket.close()
 
 if __name__ == "__main__":
-    send_history_files()
+    send_last_line_from_files()
 

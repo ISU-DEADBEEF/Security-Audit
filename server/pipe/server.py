@@ -1,6 +1,10 @@
 import socket
+import os
 
-def start_server(host='0.0.0.0', port=9999):
+def start_server(host='0.0.0.0', port=9999, log_directory='central_logs'):
+    # Ensure the log directory exists
+    os.makedirs(log_directory, exist_ok=True)
+
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.bind((host, port))
     server_socket.listen(1)
@@ -11,12 +15,16 @@ def start_server(host='0.0.0.0', port=9999):
         print(f"Connection from {client_address} has been established!")
 
         with client_socket:
-            while True:
-                data = client_socket.recv(1024)
-                if not data:
-                    break
-                # Here, you can process the received data
-                print(f"Received data: {data.decode('utf-8')}")
+            # Receive the username and the last string
+            data = client_socket.recv(1024).decode('utf-8')
+            if data:
+                username, last_line = data.split(':', 1)
+                log_file_path = os.path.join(log_directory, f"{username}.history")
+                
+                # Write the last string to the corresponding user's history file
+                with open(log_file_path, 'a') as log_file:
+                    log_file.write(last_line + '\n')
+                print(f"Appended to {log_file_path}")
 
     server_socket.close()
 
