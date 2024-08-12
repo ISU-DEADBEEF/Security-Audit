@@ -20,6 +20,9 @@ cat << 'EOF' > /usr/local/bin/log_history.sh
 # Get the current user
 USER=$(whoami)
 
+# Get the current working directory
+local DIRECTORY="$(pwd)"
+
 # Define the log file path
 LOG_FILE="/var/log/Logger/${USER}.history"
 
@@ -29,7 +32,7 @@ log_command() {
     local LAST_COMMAND="$(history 1 | sed 's/^ *[0-9]* *//')"
 
     # Append the last command to the log file with a timestamp
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - ${LAST_COMMAND}" >> "${LOG_FILE}"
+    echo "$(${USER}@${DIRECTORY} - date '+%Y-%m-%d %H:%M:%S') - ${LAST_COMMAND}" >> "${LOG_FILE}"
 }
 
 # Export the function to be used in PROMPT_COMMAND
