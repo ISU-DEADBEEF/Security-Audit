@@ -198,21 +198,7 @@ Check the log file for the dummy user:
 ls /var/log/Logger/
 tail /var/log/Logger/dummy.history
 ```
-#!/bin/bash
 
-# Get the current user
-USER=$(whoami)
-
-# Define the log file path
-LOG_FILE="/var/log/Logger/${USER}.history"
-
-# Function to append the last command to the log file
-log_command() {
-    # Get the last executed command from history
-    local LAST_COMMAND="$(history 1 | sed 's/^ *[0-9]* *//')"
-
-    # Append the last command to the log file with a timestamp
-    echo "$(
 ## Usage
 
 Security-Audit is designed to run seamlessly with bash commands. Users must have access to bash to operate and interact with the system's logging features.
