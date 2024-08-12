@@ -19,7 +19,7 @@ log_command() {
 export -f log_command
 
 # Set PROMPT_COMMAND to log each command before it executes
-PROMPT_COMMAND="log_command; $PROMPT_COMMAND"
+PROMPT_COMMAND="$PROMPT_COMMAND; log_command"
 
 # Ensure the log file exists and is writable
 mkdir -p "/var/log/Logger"
